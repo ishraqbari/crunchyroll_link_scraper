@@ -54,12 +54,9 @@ season_id = season=seriesItems[int(input('Please select a season: '))]['id']
 print(season_id)
 seasonURL= 'https://www.crunchyroll.com/cms/v2{bucket}/episodes?season_id={seriesToken}&locale=en-US&Signature={signature}&Policy={policy}&Key-Pair-Id={key}'.format(bucket=cms_web['bucket'],seriesToken=season_id,signature=cms_web['signature'],policy=cms_web['policy'],key=cms_web['key_pair_id'])
 
-print(seasonURL)
-sleep(10)
-#print(session.get(seasonURL,headers=headers,proxies=proxies, verify=False).text)
-sleep(10)
-episodes = json.loads(session.get(seasonURL,headers=headers).text)['items']
-sleep(10)
-for i in range(len(seriesItems)):
+logging.debug("Season URL is ".format(seasonURL))
+
+episodes = session.get(seasonURL,headers=headers,proxies=proxies, verify=False).json().get("items")
+for i in range(len(episodes)):
     print('https://www.crunchyroll.com/watch/{id}/{slug_title}'.format(id=episodes[i]['id'],slug_title=episodes[i]['slug_title']))
 
