@@ -7,7 +7,6 @@ import json
 import logging
 import re
 
-proxies = {"http": '127.0.0.1:8080', "https": '127.0.0.1:8080'}
 
 logging.basicConfig(level=logging.WARNING)
 
@@ -34,10 +33,9 @@ resp = json.loads(session.get('https://www.crunchyroll.com/index/v2',headers=hea
 
 cms_web = resp['cms_web']
 
-print('Authorization complete.')
 url  = input('Please provide the series URL: ')
 match = re.search('/series/(?P<token>[A-Z0-9]+)/',url)
-print(match)
+
 if match:
     seriesToken =  match.group('token')
 else:
@@ -56,7 +54,7 @@ seasonURL= 'https://www.crunchyroll.com/cms/v2{bucket}/episodes?season_id={serie
 
 logging.debug("Season URL is {}".format(seasonURL))
 
-episodes = session.get(seasonURL,headers=headers,proxies=proxies, verify=False).json().get("items")
-for i in range(len(episodes)):
-    print('https://www.crunchyroll.com/watch/{id}/{slug_title}'.format(id=episodes[i]['id'],slug_title=episodes[i]['slug_title']))
+episodes = session.get(seasonURL,headers=headers, verify=False).json().get("items")
+for episode in episodes:
+    print('https://www.crunchyroll.com/watch/{id}/{slug_title}'.format(id=episode['id'],slug_title=episode['slug_title']))
 
